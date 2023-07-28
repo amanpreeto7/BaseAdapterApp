@@ -27,6 +27,38 @@ class MainActivity : AppCompatActivity() {
         //studentList.add(StudentDataClass(1, "Nitish"))
         //studentList.add(StudentDataClass(2, "Ameesha"))
         //studentList.add(StudentDataClass(name = "Ajay"))
+
+        binding.listView.setOnItemLongClickListener { parent, view, position, id ->
+            var dialog = Dialog(this)
+            dialog.setContentView(R.layout.dialog_layout)
+            var etName = dialog.findViewById<EditText>(R.id.etName)
+            var btnAdd = dialog.findViewById<Button>(R.id.btnAdd)
+            btnAdd.setText("Update")
+            btnAdd.setOnClickListener {
+                if(etName.text.toString().isNullOrEmpty()){
+                    etName.error = "Enter your name"
+                }else{
+                    class updateStudent : AsyncTask<Void, Void, Void>(){
+                        override fun doInBackground(vararg params: Void?): Void? {
+                            studentDatabase.studentDao().updateStudent(StudentDataClass(name = etName.text.toString(), id = studentList[position].id))
+                            dialog.dismiss()
+                            return null
+                        }
+
+                        override fun onPostExecute(result: Void?) {
+                            super.onPostExecute(result)
+                            getStudents()
+                        }
+                    }
+
+                    updateStudent().execute()
+                    baseAdapterClass.notifyDataSetChanged()
+                }
+            }
+            dialog.show()
+            return@setOnItemLongClickListener true
+        }
+
         binding.listView.setOnItemClickListener{adapter, view, position, id->
             System.out.println("position $position id $id")
            // studentList.removeAt(position)

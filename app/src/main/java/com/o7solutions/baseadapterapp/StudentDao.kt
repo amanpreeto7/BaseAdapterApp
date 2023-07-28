@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 /**
  * @Author: 017
@@ -21,4 +22,10 @@ interface StudentDao {
 
     @Delete
     fun deleteStudent(studentDataClass: StudentDataClass)
+
+    @Update
+    fun updateStudent(studentDataClass: StudentDataClass)
+
+    @Query("SELECT * FROM StudentDataClass where id= :sid")
+    fun selectParticularStudent(sid: Int)
 }
